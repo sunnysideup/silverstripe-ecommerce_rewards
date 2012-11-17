@@ -28,12 +28,12 @@ class CheckMemberRewardPoints extends BuildTask {
 			<table border=\"1\">
 				<thead>
 					<tr>
-						<th></th>
-						<th>USED</th>
-						<th>GAINED</th>
-						<th>CHANGE</th>
-						<th>RUNNING TOTAL</th>
-						<th>Note</th>
+						<th scope=\"col\">ORDER</th>
+						<th scope=\"col\">USED</th>
+						<th scope=\"col\">GAINED</th>
+						<th scope=\"col\">CHANGE</th>
+						<th scope=\"col\">RUNNING TOTAL</th>
+						<th scope=\"col\">NOTES</th>
 					</tr>
 				</thead>
 				<tbody>";
@@ -66,21 +66,30 @@ class CheckMemberRewardPoints extends BuildTask {
 							$note .= "ERROR, calculated points added: ".$order->CalculateRewardsTotal().", difference: ".($order->RewardsTotal - $order->CalculateRewardsTotal());
 						}
 						$change = $order->PointsTotal - $order->RewardsTotal;
+						$sumPointsTotal += $order->PointsTotal;
+						$sumRewardsTotal += $order->RewardsTotal;
 						$memberTotal += $change;
 						echo "
 					<tr>
-						<td>Order #".$order->ID."</td>
+						<td>Order #".$order->getTitle()."</td>
 						<td>".$order->RewardsTotal."</td>
 						<td>".$order->PointsTotal."</td>
 						<td>".$change."</td>
 						<td>".$memberTotal."</td>
+						<td>".$note."</td>
 					</tr>";
 					}
 				}
+				if($member->PointsBalance != $memberTotal) {
+					$note = "DIFFEREN BETWEEN POINTS RECORDED (".$member->PointsBalanc.") AND CALCULATIONS (".$memberTotal.")";
+				}
 				echo "
 					<tr>
-						<th colspan=\"3\">CALCULATED BALANCE</th>
+						<th scope=\"col\">TODAY:</th>
+						<td>$sumPointsTotal</td>
+						<td>$sumRewardsTotal</td>
 						<td>$memberTotal</td>
+						<td>$note</td>
 					</tr>";
 			}
 			echo "</tbody></table>";
