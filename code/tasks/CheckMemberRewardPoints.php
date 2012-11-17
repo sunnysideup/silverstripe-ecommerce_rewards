@@ -25,6 +25,7 @@ class CheckMemberRewardPoints extends BuildTask {
 		foreach($members as $member) {
 			echo "
 			<h3>$member->FirstName $member->Surname, $member->Email: $member->PointsBalance</h3>
+			<style>td {text-align: right;}</style>
 			<table border=\"1\">
 				<thead>
 					<tr>
@@ -73,7 +74,7 @@ class CheckMemberRewardPoints extends BuildTask {
 						$memberTotal += $change;
 						echo "
 					<tr>
-						<td>Order #".$order->getTitle()."</td>
+						<td>".$order->getTitle()."</td>
 						<td>".$order->RewardsTotal."</td>
 						<td>".$order->PointsTotal."</td>
 						<td>".$change."</td>
@@ -95,7 +96,6 @@ class CheckMemberRewardPoints extends BuildTask {
 						<td>$sumPointsTotal</td>
 						<td>&nbsp;</td>
 						<td>$memberTotal</td>
-						<td>$difference</td>
 						<td>$note</td>
 					</tr>";
 			}
