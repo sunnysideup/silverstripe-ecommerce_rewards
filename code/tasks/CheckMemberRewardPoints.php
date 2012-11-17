@@ -53,7 +53,7 @@ class CheckMemberRewardPoints extends BuildTask {
 			if($orders) {
 				foreach($orders as $order) {
 					if($order->IsSubmitted()) {
-						$note = "";
+						$note = "&nbsp;";
 						if(round($order->PointsTotal, 2) != round($order->CalculatePointsTotal(), 2)) {
 							if($order->CalculatePointsTotal() > 0 && $order->PointsTotal == 0) {
 								$order->PointsTotal = $order->CalculatePointsTotal();
@@ -83,7 +83,7 @@ class CheckMemberRewardPoints extends BuildTask {
 					</tr>";
 					}
 				}
-				$note = "";
+				$note = "&nbsp;";
 				$difference = 0;
 				if($member->PointsBalance != $memberTotal) {
 					$difference = $member->PointsBalance - $memberTotal;
