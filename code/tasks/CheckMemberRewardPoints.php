@@ -58,15 +58,17 @@ class CheckMemberRewardPoints extends BuildTask {
 					if($order->IsSubmitted()) {
 						$note = "&nbsp;";
 						if(round($order->PointsTotal, 2) != round($order->CalculatePointsTotal(), 2)) {
-							if($order->CalculatePointsTotal() > 0 && $order->PointsTotal == 0) {
+							if($order->PointsTotal == 0 && $order->CalculatePointsTotal() > 0) {
 								$order->PointsTotal = $order->CalculatePointsTotal();
+								DB::query("UPDATE \"Order\" SET \"PointsTotal\" = ".$order->CalculateRewardsTotal(). " WHERE \"Order\".\"ID\" = ".$order->ID);
 								//$order->write();
 							}
 							$note .= "ERROR, CALCULATED POINTS ADDED: ".$order->CalculatePointsTotal().", difference: ".($order->PointsTotal - $order->CalculatePointsTotal());
 						}
 						if(round($order->RewardsTotal, 2) != round($order->CalculateRewardsTotal(), 2)) {
-							if($order->CalculateRewardsTotal() > 0 && $order->RewardsTotal == 0) {
+							if($order->RewardsTotal == 0 && $order->CalculateRewardsTotal() > 0) {
 								$order->RewardsTotal = $order->CalculateRewardsTotal();
+								DB::query("UPDATE \"Order\" SET \"RewardsTotal\" = ".$order->CalculateRewardsTotal(). " WHERE \"Order\".\"ID\" = ".$order->ID);
 								//$order->write();
 							}
 							$note .= "ERROR, CALCULATED POINTS USED: ".$order->CalculateRewardsTotal().", difference: ".($order->RewardsTotal - $order->CalculateRewardsTotal());
