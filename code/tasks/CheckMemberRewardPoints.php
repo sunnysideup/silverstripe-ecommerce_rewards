@@ -26,18 +26,18 @@ class CheckMemberRewardPoints extends BuildTask {
 			echo "
 			<h3>$member->FirstName $member->Surname, $member->Email: $member->PointsBalance</h3>
 			<style>
-				td {text-align: right; font-size: 12px;}
-				th {font-sizeZ: 12px}
+				td {text-align: right; font-size: 10px;}
+				th {font-size: 10px}
 			</style>
 			<table border=\"1\">
 				<thead>
 					<tr>
-						<th scope=\"col\" style=\"width: 30%;\">ORDER</th>
+						<th scope=\"col\" style=\"width: 20%;\">ORDER</th>
 						<th scope=\"col\" style=\"width: 10%;\">USED</th>
 						<th scope=\"col\" style=\"width: 10%;\">GAINED</th>
 						<th scope=\"col\" style=\"width: 10%;\">CHANGE</th>
 						<th scope=\"col\" style=\"width: 10%;\">RUNNING TOTAL</th>
-						<th scope=\"col\" style=\"width: 30%;\">NOTES</th>
+						<th scope=\"col\" style=\"width: 40%;\">NOTES</th>
 					</tr>
 				</thead>
 				<tbody>";
@@ -77,7 +77,7 @@ class CheckMemberRewardPoints extends BuildTask {
 						$memberTotal += $change;
 						echo "
 					<tr>
-						<td>".$order->getTitle()."</td>
+						<td>#".$order->ID." ".$order->LastEdited."</td>
 						<td>".$order->RewardsTotal."</td>
 						<td>".$order->PointsTotal."</td>
 						<td>".$change."</td>
