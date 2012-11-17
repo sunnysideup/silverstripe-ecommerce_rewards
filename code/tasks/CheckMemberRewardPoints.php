@@ -32,6 +32,8 @@ class CheckMemberRewardPoints extends BuildTask {
 						<th>USED</th>
 						<th>GAINED</th>
 						<th>CHANGE</th>
+						<th>RUNNING TOTAL</th>
+						<th>Note</th>
 					</tr>
 				</thead>
 				<tbody>";
@@ -48,6 +50,21 @@ class CheckMemberRewardPoints extends BuildTask {
 			if($orders) {
 				foreach($orders as $order) {
 					if($order->IsSubmitted()) {
+						$note = "";
+						if($order->PointsTotal != $order->CalculatePointsTotal()) {
+							if($order->CalculatePointsTotal() > 0 && $order->PointsTotal == 0) {
+								$order->PointsTotal = $order->CalculatePointsTotal();
+								//$order->write();
+							}
+							$note .= "ERROR, calculated points added: ".$order->CalculatePointsTotal().", difference: ".($order->PointsTotal - $order->CalculatePointsTotal());
+						}
+						if($order->RewardsTotal != $order->CalculateRewardsTotal()) {
+							if($order->CalculateRewardsTotal() > 0 && $order->RewardsTotal == 0) {
+								$order->RewardsTotal = $order->CalculateRewardsTotal();
+								//$order->write();
+							}
+							$note .= "ERROR, calculated points added: ".$order->CalculateRewardsTotal().", difference: ".($order->RewardsTotal - $order->CalculateRewardsTotal());
+						}
 						$change = $order->PointsTotal - $order->RewardsTotal;
 						$memberTotal += $change;
 						echo "
@@ -56,6 +73,7 @@ class CheckMemberRewardPoints extends BuildTask {
 						<td>".$order->RewardsTotal."</td>
 						<td>".$order->PointsTotal."</td>
 						<td>".$change."</td>
+						<td>".$memberTotal."</td>
 					</tr>";
 					}
 				}
