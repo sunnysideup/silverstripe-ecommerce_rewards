@@ -43,6 +43,8 @@ class CheckMemberRewardPoints extends BuildTask {
 				" \"Order\".\"ID\" ASC"
 			);
 			$memberTotal = 0;
+			$sumPointsTotal += 0;
+			$sumRewardsTotal += 0;
 			if($reset) {
 				$member->PointsBalance = 0;
 				$member->write();
