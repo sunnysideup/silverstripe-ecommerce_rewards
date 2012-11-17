@@ -82,6 +82,7 @@ class CheckMemberRewardPoints extends BuildTask {
 					</tr>";
 					}
 				}
+				$note = "";
 				if($member->PointsBalance != $memberTotal) {
 					$note = "DIFFEREN BETWEEN POINTS RECORDED (".$member->PointsBalanc.") AND CALCULATIONS (".$memberTotal.")";
 				}
