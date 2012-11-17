@@ -25,7 +25,10 @@ class CheckMemberRewardPoints extends BuildTask {
 		foreach($members as $member) {
 			echo "
 			<h3>$member->FirstName $member->Surname, $member->Email: $member->PointsBalance</h3>
-			<style>td {text-align: right;}</style>
+			<style>
+				td {text-align: right; width: 13.5%}
+				th {width: 30%;}
+			</style>
 			<table border=\"1\">
 				<thead>
 					<tr>

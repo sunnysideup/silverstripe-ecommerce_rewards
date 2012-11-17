@@ -17,7 +17,7 @@ class RewardItem extends DataObject{
 	}
 
 	function TotalPoints(){
-		if($this->Points) {
+		if($this->Points > 0) {
 			return $this->Points * $this->Quantity;
 		}
 		else {
