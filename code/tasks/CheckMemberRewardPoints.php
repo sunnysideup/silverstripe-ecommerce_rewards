@@ -32,12 +32,12 @@ class CheckMemberRewardPoints extends BuildTask {
 			<table border=\"1\">
 				<thead>
 					<tr>
-						<th scope=\"col\" style=\"width: 14em\">ORDER</th>
+						<th scope=\"col\" style=\"width: 30em\">ORDER</th>
 						<th scope=\"col\" style=\"width: 5em;\">GAINED</th>
 						<th scope=\"col\" style=\"width: 5em;\">USED</th>
 						<th scope=\"col\" style=\"width: 5em;\">CHANGE</th>
 						<th scope=\"col\" style=\"width: 5em;\">RUNNING TOTAL</th>
-						<th scope=\"col\" style=\"width: 20em;\">NOTES</th>
+						<th scope=\"col\" style=\"width: 60em;\">NOTES</th>
 					</tr>
 				</thead>
 				<tbody>";
