@@ -33,8 +33,8 @@ class CheckMemberRewardPoints extends BuildTask {
 				<thead>
 					<tr>
 						<th scope=\"col\" style=\"width: 20%;\">ORDER</th>
-						<th scope=\"col\" style=\"width: 10%;\">USED</th>
 						<th scope=\"col\" style=\"width: 10%;\">GAINED</th>
+						<th scope=\"col\" style=\"width: 10%;\">USED</th>
 						<th scope=\"col\" style=\"width: 10%;\">CHANGE</th>
 						<th scope=\"col\" style=\"width: 10%;\">RUNNING TOTAL</th>
 						<th scope=\"col\" style=\"width: 40%;\">NOTES</th>
@@ -78,8 +78,8 @@ class CheckMemberRewardPoints extends BuildTask {
 						echo "
 					<tr>
 						<td>#".$order->ID." ".$order->LastEdited."</td>
-						<td>".$order->RewardsTotal."</td>
 						<td>".$order->PointsTotal."</td>
+						<td>".$order->RewardsTotal."</td>
 						<td>".$change."</td>
 						<td>".$memberTotal."</td>
 						<td>".$note."</td>
@@ -95,9 +95,9 @@ class CheckMemberRewardPoints extends BuildTask {
 				echo "
 					<tr>
 						<th scope=\"col\">TODAY:</th>
-						<td>$sumRewardsTotal</td>
 						<td>$sumPointsTotal</td>
-						<td>&nbsp;</td>
+						<td>$sumRewardsTotal</td>
+						<td>".($sumPointsTotal - $sumRewardsTotal)."</td>
 						<td>$memberTotal</td>
 						<td>$note</td>
 					</tr>";
