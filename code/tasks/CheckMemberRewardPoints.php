@@ -95,11 +95,11 @@ class CheckMemberRewardPoints extends BuildTask {
 				echo "
 					<tr>
 						<th scope=\"col\">TODAY:</th>
-						<td>$sumPointsTotal</td>
-						<td>$sumRewardsTotal</td>
-						<td>".($sumPointsTotal - $sumRewardsTotal)."</td>
-						<td>$memberTotal</td>
-						<td>$note</td>
+						<td><strong>$sumPointsTotal</strong></td>
+						<td><strong>$sumRewardsTotal</strong></td>
+						<td><strong>".($sumPointsTotal - $sumRewardsTotal)."</strong></td>
+						<td><strong>$memberTotal</strong></td>
+						<td><strong>$note</strong></td>
 					</tr>";
 			}
 			echo "</tbody></table>";
