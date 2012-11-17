@@ -53,19 +53,19 @@ class CheckMemberRewardPoints extends BuildTask {
 				foreach($orders as $order) {
 					if($order->IsSubmitted()) {
 						$note = "";
-						if($order->PointsTotal != $order->CalculatePointsTotal()) {
+						if(round($order->PointsTotal, 2) != round($order->CalculatePointsTotal(), 2)) {
 							if($order->CalculatePointsTotal() > 0 && $order->PointsTotal == 0) {
 								$order->PointsTotal = $order->CalculatePointsTotal();
 								//$order->write();
 							}
-							$note .= "ERROR, calculated points added: ".$order->CalculatePointsTotal().", difference: ".($order->PointsTotal - $order->CalculatePointsTotal());
+							$note .= "ERROR, CALCULATED POINTS ADDED: ".$order->CalculatePointsTotal().", difference: ".($order->PointsTotal - $order->CalculatePointsTotal());
 						}
-						if($order->RewardsTotal != $order->CalculateRewardsTotal()) {
+						if(round($order->RewardsTotal, 2) != round($order->CalculateRewardsTotal(), 2)) {
 							if($order->CalculateRewardsTotal() > 0 && $order->RewardsTotal == 0) {
 								$order->RewardsTotal = $order->CalculateRewardsTotal();
 								//$order->write();
 							}
-							$note .= "ERROR, calculated points added: ".$order->CalculateRewardsTotal().", difference: ".($order->RewardsTotal - $order->CalculateRewardsTotal());
+							$note .= "ERROR, CALCULATED POINTS USED: ".$order->CalculateRewardsTotal().", difference: ".($order->RewardsTotal - $order->CalculateRewardsTotal());
 						}
 						$change = $order->PointsTotal - $order->RewardsTotal;
 						$sumPointsTotal += $order->PointsTotal;
@@ -83,15 +83,19 @@ class CheckMemberRewardPoints extends BuildTask {
 					}
 				}
 				$note = "";
+				$difference = 0;
 				if($member->PointsBalance != $memberTotal) {
-					$note = "DIFFEREN BETWEEN POINTS RECORDED (".$member->PointsBalanc.") AND CALCULATIONS (".$memberTotal.")";
+					$difference = $member->PointsBalance - $memberTotal;
+					$note = "ERROR IN POINTS RECORDED (".$member->PointsBalance.") AND CALCULATED (".$memberTotal."), difference ".$difference;
 				}
 				echo "
 					<tr>
 						<th scope=\"col\">TODAY:</th>
-						<td>$sumPointsTotal</td>
 						<td>$sumRewardsTotal</td>
+						<td>$sumPointsTotal</td>
+						<td>&nbsp;</td>
 						<td>$memberTotal</td>
+						<td>$difference</td>
 						<td>$note</td>
 					</tr>";
 			}
