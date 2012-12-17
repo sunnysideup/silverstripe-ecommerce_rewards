@@ -63,5 +63,9 @@ class OrderRewardsForm extends Form{
 		Director::redirect($this->controller->Link().'checkoutstep/orderconfirmationandpayment/');
 	}
 
+	function CheckoutLink(){
+		return CheckoutPage::find_link();
+	}
+
 }
 

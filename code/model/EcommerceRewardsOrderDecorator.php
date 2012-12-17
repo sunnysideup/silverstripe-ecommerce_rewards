@@ -6,7 +6,7 @@ class EcommerceRewardsOrderDecorator extends DataObjectDecorator {
 		return array (
 			'db' => array (
 				'PointsTotal' => 'Currency',
-				'RewardsTotal' => 'Currency',
+				'RewardsTotal' => 'Currency'
 			),
 			'has_many' => array(
 				'RewardItems' => 'RewardItem'

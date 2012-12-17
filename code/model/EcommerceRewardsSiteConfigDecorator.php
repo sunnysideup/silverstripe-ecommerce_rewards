@@ -22,5 +22,30 @@ class EcommerceRewardsSiteConfigDecorator extends DataObjectDecorator {
 		return $fields;
 	}
 
+	private $lastPointsExchangeRate = 0;
+
+	function onBeforeWrite(){
+		$this->lastPointsExchangeRate = $this->owner->PointsExchangeRate;
+	}
+
+	function onAfterWrite(){
+		if(!$this->lastPointsExchangeRate != $this->owner->PointsExchangeRate) {
+			$obj = new EcommerceRewardsSiteConfigDecorator_Log();
+			$obj->PreviousValue = $this->lastPointsExchangeRate;
+			$obj->CurrentValue = $this->owner->PointsExchangeRate;
+			$obj->write();
+		}
+	}
+
+
+}
+
+
+class EcommerceRewardsSiteConfigDecorator_Log extends DataObject {
+
+	static $db = array(
+		"PreviousValue" => "Currency",
+		"CurrentValue" => "Currency"
+	);
 
 }

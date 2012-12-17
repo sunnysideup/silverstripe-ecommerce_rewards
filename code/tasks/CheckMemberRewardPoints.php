@@ -32,7 +32,7 @@ class CheckMemberRewardPoints extends BuildTask {
 			<table border=\"1\">
 				<thead>
 					<tr>
-						<th scope=\"col\" style=\"width: 30em\">ORDER</th>
+						<th scope=\"col\" style=\"width: 20em\">ORDER</th>
 						<th scope=\"col\" style=\"width: 5em;\">GAINED</th>
 						<th scope=\"col\" style=\"width: 5em;\">USED</th>
 						<th scope=\"col\" style=\"width: 5em;\">CHANGE</th>
@@ -44,7 +44,11 @@ class CheckMemberRewardPoints extends BuildTask {
 			$orders = DataObject::get(
 				"Order",
 				"\"MemberID\" = ".$member->ID." AND \"CancelledByID\" = 0 OR \"CancelledByID\" IS NULL",
-				" \"Order\".\"ID\" ASC"
+				" OrderStatusLog_Submitted.ID ASC",
+				"
+					INNER JOIN OrderStatusLog ON OrderStatusLog.OrderID = \"Order\".\"ID\"
+					INNER JOIN OrderStatusLog_Submitted` ON OrderStatusLog.ID = OrderStatusLog_Submitted.ID
+				"
 			);
 			$memberTotal = 0;
 			$sumPointsTotal = 0;
@@ -58,7 +62,7 @@ class CheckMemberRewardPoints extends BuildTask {
 					if($order->IsSubmitted()) {
 						$note = "&nbsp;";
 						if(round($order->PointsTotal, 2) != round($order->CalculatePointsTotal(), 2)) {
-							$note .= "ERROR, CALCULATED POINTS ADDED: ".$order->CalculatePointsTotal().", difference: ".($order->PointsTotal - $order->CalculatePointsTotal());
+							$note .= " <span style=\"color: red\">ERROR, CALCULATED POINTS ADDED: ".$order->CalculatePointsTotal().", difference: ".($order->PointsTotal - $order->CalculatePointsTotal())."</span>";
 							if($order->PointsTotal == 0 && $order->CalculatePointsTotal() > 0) {
 								$order->PointsTotal = $order->CalculatePointsTotal();
 								//DB::query("UPDATE \"Order\" SET \"PointsTotal\" = ".$order->CalculateRewardsTotal(). " WHERE \"Order\".\"ID\" = ".$order->ID);
@@ -66,10 +70,10 @@ class CheckMemberRewardPoints extends BuildTask {
 							}
 						}
 						if(round($order->RewardsTotal, 2) != round($order->CalculateRewardsTotal(), 2)) {
-							$note .= "ERROR, CALCULATED POINTS USED: ".$order->CalculateRewardsTotal().", difference: ".($order->RewardsTotal - $order->CalculateRewardsTotal());
+							$note .= " <span style=\"color: red\">ERROR, CALCULATED POINTS USED: ".$order->CalculateRewardsTotal().", difference: ".($order->RewardsTotal - $order->CalculateRewardsTotal())."</span>";
 							if($order->RewardsTotal == 0 && $order->CalculateRewardsTotal() > 0) {
 								$order->RewardsTotal = $order->CalculateRewardsTotal();
-								DB::query("UPDATE \"Order\" SET \"RewardsTotal\" = ".$order->CalculateRewardsTotal(). " WHERE \"Order\".\"ID\" = ".$order->ID);
+								//DB::query("UPDATE \"Order\" SET \"RewardsTotal\" = ".$order->CalculateRewardsTotal(). " WHERE \"Order\".\"ID\" = ".$order->ID);
 								//$order->write();
 							}
 						}
@@ -92,7 +96,7 @@ class CheckMemberRewardPoints extends BuildTask {
 				$difference = 0;
 				if($member->PointsBalance != $memberTotal) {
 					$difference = $member->PointsBalance - $memberTotal;
-					$note = "ERROR IN POINTS RECORDED (".$member->PointsBalance.") AND CALCULATED (".$memberTotal."), difference ".$difference;
+					$note = "<span style=\"color: red\">ERROR IN POINTS RECORDED (".$member->PointsBalance.") AND CALCULATED (".$memberTotal."), difference ".$difference."</span>";
 				}
 				echo "
 					<tr>

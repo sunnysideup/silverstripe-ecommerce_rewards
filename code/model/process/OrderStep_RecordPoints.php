@@ -30,10 +30,12 @@ class OrderStep_RecordPoints extends OrderStep {
 	 **/
 	public function doStep($order) {
 		if(!DataObject::get_one("OrderStep_RecordPoints_Log", "\"OrderID\" = ".$order->ID)) {
-			if(!$order->PointsTotal) {
+			if($order->PointsTotal == 0) {
 				$order->PointsTotal = $order->CalculatePointsTotal();
 			}
-			$order->RewardsTotal = $order->CalculateRewardsTotal();
+			if($order->RewardsTotal == 0) {
+				$order->RewardsTotal = $order->CalculateRewardsTotal();
+			}
 			$order->write();
 			$log = new OrderStep_RecordPoints_Log();
 			$log->PointsTotal = $order->PointsTotal;
