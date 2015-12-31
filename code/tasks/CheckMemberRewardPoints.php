@@ -1,29 +1,32 @@
 <?php
 
 
-class CheckMemberRewardPoints extends BuildTask {
+class CheckMemberRewardPoints extends BuildTask
+{
 
-	function getTitle() {
-		return 'Check points for all members';
-	}
+    public function getTitle()
+    {
+        return 'Check points for all members';
+    }
 
-	function getDescription() {
-		return 'Goes through all customers and checks their orders and the points gained / points used.';
-	}
+    public function getDescription()
+    {
+        return 'Goes through all customers and checks their orders and the points gained / points used.';
+    }
 
-	function run($request){
-		if($request->Param("ID") =="reset") {
-			$reset = true;
-			echo "<h1 style=\"color: red\">RESETTING MEMBER POINTS!</h1>";
-		}
-		else {
-			$reset = false;
-			echo "<h1>MORE OPTIONS</h1>";
-			echo "<a href=\"reset/\">Reset points for all members</a>";
-		}
-		$members = DataObject::get("Member", "", "Member.Email", "INNER JOIN \"Order\" ON \"Order\".\"MemberID\" = \"Member\".\"ID\"");
-		foreach($members as $member) {
-			echo "
+    public function run($request)
+    {
+        if ($request->Param("ID") =="reset") {
+            $reset = true;
+            echo "<h1 style=\"color: red\">RESETTING MEMBER POINTS!</h1>";
+        } else {
+            $reset = false;
+            echo "<h1>MORE OPTIONS</h1>";
+            echo "<a href=\"reset/\">Reset points for all members</a>";
+        }
+        $members = DataObject::get("Member", "", "Member.Email", "INNER JOIN \"Order\" ON \"Order\".\"MemberID\" = \"Member\".\"ID\"");
+        foreach ($members as $member) {
+            echo "
 			<h3>$member->FirstName $member->Surname, $member->Email: $member->PointsBalance</h3>
 			<style>
 				td {text-align: right; font-size: 10px;}
@@ -41,47 +44,47 @@ class CheckMemberRewardPoints extends BuildTask {
 					</tr>
 				</thead>
 				<tbody>";
-			$orders = DataObject::get(
-				"Order",
-				"\"MemberID\" = ".$member->ID." AND \"CancelledByID\" = 0 OR \"CancelledByID\" IS NULL",
-				" OrderStatusLog_Submitted.ID ASC",
-				"
+            $orders = DataObject::get(
+                "Order",
+                "\"MemberID\" = ".$member->ID." AND \"CancelledByID\" = 0 OR \"CancelledByID\" IS NULL",
+                " OrderStatusLog_Submitted.ID ASC",
+                "
 					INNER JOIN OrderStatusLog ON OrderStatusLog.OrderID = \"Order\".\"ID\"
 					INNER JOIN OrderStatusLog_Submitted` ON OrderStatusLog.ID = OrderStatusLog_Submitted.ID
 				"
-			);
-			$memberTotal = 0;
-			$sumPointsTotal = 0;
-			$sumRewardsTotal = 0;
-			if($reset) {
-				$member->PointsBalance = 0;
-				$member->write();
-			}
-			if($orders) {
-				foreach($orders as $order) {
-					if($order->IsSubmitted()) {
-						$note = "&nbsp;";
-						if(round($order->PointsTotal, 2) != round($order->CalculatePointsTotal(), 2)) {
-							$note .= " <span style=\"color: red\">ERROR, CALCULATED POINTS ADDED: ".$order->CalculatePointsTotal().", difference: ".($order->PointsTotal - $order->CalculatePointsTotal())."</span>";
-							if($order->PointsTotal == 0 && $order->CalculatePointsTotal() > 0) {
-								$order->PointsTotal = $order->CalculatePointsTotal();
-								//DB::query("UPDATE \"Order\" SET \"PointsTotal\" = ".$order->CalculateRewardsTotal(). " WHERE \"Order\".\"ID\" = ".$order->ID);
-								//$order->write();
-							}
-						}
-						if(round($order->RewardsTotal, 2) != round($order->CalculateRewardsTotal(), 2)) {
-							$note .= " <span style=\"color: red\">ERROR, CALCULATED POINTS USED: ".$order->CalculateRewardsTotal().", difference: ".($order->RewardsTotal - $order->CalculateRewardsTotal())."</span>";
-							if($order->RewardsTotal == 0 && $order->CalculateRewardsTotal() > 0) {
-								$order->RewardsTotal = $order->CalculateRewardsTotal();
-								//DB::query("UPDATE \"Order\" SET \"RewardsTotal\" = ".$order->CalculateRewardsTotal(). " WHERE \"Order\".\"ID\" = ".$order->ID);
-								//$order->write();
-							}
-						}
-						$change = $order->PointsTotal - $order->RewardsTotal;
-						$sumPointsTotal += $order->PointsTotal;
-						$sumRewardsTotal += $order->RewardsTotal;
-						$memberTotal += $change;
-						echo "
+            );
+            $memberTotal = 0;
+            $sumPointsTotal = 0;
+            $sumRewardsTotal = 0;
+            if ($reset) {
+                $member->PointsBalance = 0;
+                $member->write();
+            }
+            if ($orders) {
+                foreach ($orders as $order) {
+                    if ($order->IsSubmitted()) {
+                        $note = "&nbsp;";
+                        if (round($order->PointsTotal, 2) != round($order->CalculatePointsTotal(), 2)) {
+                            $note .= " <span style=\"color: red\">ERROR, CALCULATED POINTS ADDED: ".$order->CalculatePointsTotal().", difference: ".($order->PointsTotal - $order->CalculatePointsTotal())."</span>";
+                            if ($order->PointsTotal == 0 && $order->CalculatePointsTotal() > 0) {
+                                $order->PointsTotal = $order->CalculatePointsTotal();
+                                //DB::query("UPDATE \"Order\" SET \"PointsTotal\" = ".$order->CalculateRewardsTotal(). " WHERE \"Order\".\"ID\" = ".$order->ID);
+                                //$order->write();
+                            }
+                        }
+                        if (round($order->RewardsTotal, 2) != round($order->CalculateRewardsTotal(), 2)) {
+                            $note .= " <span style=\"color: red\">ERROR, CALCULATED POINTS USED: ".$order->CalculateRewardsTotal().", difference: ".($order->RewardsTotal - $order->CalculateRewardsTotal())."</span>";
+                            if ($order->RewardsTotal == 0 && $order->CalculateRewardsTotal() > 0) {
+                                $order->RewardsTotal = $order->CalculateRewardsTotal();
+                                //DB::query("UPDATE \"Order\" SET \"RewardsTotal\" = ".$order->CalculateRewardsTotal(). " WHERE \"Order\".\"ID\" = ".$order->ID);
+                                //$order->write();
+                            }
+                        }
+                        $change = $order->PointsTotal - $order->RewardsTotal;
+                        $sumPointsTotal += $order->PointsTotal;
+                        $sumRewardsTotal += $order->RewardsTotal;
+                        $memberTotal += $change;
+                        echo "
 					<tr>
 						<td>#".$order->ID." ".$order->LastEdited."</td>
 						<td>".$order->PointsTotal."</td>
@@ -90,15 +93,15 @@ class CheckMemberRewardPoints extends BuildTask {
 						<td>".$memberTotal."</td>
 						<td>".$note."</td>
 					</tr>";
-					}
-				}
-				$note = "&nbsp;";
-				$difference = 0;
-				if($member->PointsBalance != $memberTotal) {
-					$difference = $member->PointsBalance - $memberTotal;
-					$note = "<span style=\"color: red\">ERROR IN POINTS RECORDED (".$member->PointsBalance.") AND CALCULATED (".$memberTotal."), difference ".$difference."</span>";
-				}
-				echo "
+                    }
+                }
+                $note = "&nbsp;";
+                $difference = 0;
+                if ($member->PointsBalance != $memberTotal) {
+                    $difference = $member->PointsBalance - $memberTotal;
+                    $note = "<span style=\"color: red\">ERROR IN POINTS RECORDED (".$member->PointsBalance.") AND CALCULATED (".$memberTotal."), difference ".$difference."</span>";
+                }
+                echo "
 					<tr>
 						<th scope=\"col\">TODAY:</th>
 						<td><strong>$sumPointsTotal</strong></td>
@@ -107,30 +110,31 @@ class CheckMemberRewardPoints extends BuildTask {
 						<td><strong>$memberTotal</strong></td>
 						<td><strong>$note</strong></td>
 					</tr>";
-			}
-			echo "</tbody></table>";
-			if($reset) {
-				$member->PointsBalance = $memberTotal;
-				$member->write();
-			}
-		}
-	}
-
+            }
+            echo "</tbody></table>";
+            if ($reset) {
+                $member->PointsBalance = $memberTotal;
+                $member->write();
+            }
+        }
+    }
 }
 
 
 
-class CheckMemberRewardPoints_AdminEXT extends Extension {
+class CheckMemberRewardPoints_AdminEXT extends Extension
+{
 
-	static $allowed_actions = array('checkmemberrewardpoints' => true);
+    public static $allowed_actions = array('checkmemberrewardpoints' => true);
 
-	function updateEcommerceDevMenuRegularMaintenance($tasks) {
-		$tasks[] = 'checkmemberrewardpoints';
-		return $tasks;
-	}
+    public function updateEcommerceDevMenuRegularMaintenance($tasks)
+    {
+        $tasks[] = 'checkmemberrewardpoints';
+        return $tasks;
+    }
 
-	function checkmemberrewardpoints($request) {
-		$this->owner->runTask("CheckMemberRewardPoints", $request);
-	}
-
+    public function checkmemberrewardpoints($request)
+    {
+        $this->owner->runTask("CheckMemberRewardPoints", $request);
+    }
 }
